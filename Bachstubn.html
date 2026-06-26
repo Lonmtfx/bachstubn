@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BACHSTUBN – Wiener Wirtshaus</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display+SC:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --forest:   #1C3426;
+    --forest-lt:#254836;
+    --parchment:#F2E8D5;
+    --cream:    #FAF5EC;
+    --brass:    #B8935A;
+    --brass-lt: #D4AF7A;
+    --charcoal: #2A2318;
+    --terracotta:#C4785A;
+    --text-dark: #2A2318;
+    --text-light:#FAF5EC;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 3rem;
+    background: transparent;
+    transition: background 0.4s, backdrop-filter 0.4s;
+  }
+  nav.scrolled {
+    background: rgba(28, 52, 38, 0.96);
+    backdrop-filter: blur(12px);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display SC', serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.18em;
+    color: var(--parchment);
+  }
+  .nav-links { display: flex; gap: 2.4rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--parchment);
+    text-decoration: none;
+    opacity: 0.85;
+    transition: opacity 0.2s;
+  }
+  .nav-links a:hover { opacity: 1; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    background: var(--forest);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 6rem 2rem 4rem;
+  }
+
+  /* Decorative background grain */
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  /* Corner ornaments */
+  .corner { position: absolute; width: 90px; height: 90px; }
+  .corner svg { width: 100%; height: 100%; }
+  .corner-tl { top: 5rem; left: 2.5rem; }
+  .corner-tr { top: 5rem; right: 2.5rem; transform: scaleX(-1); }
+  .corner-bl { bottom: 2.5rem; left: 2.5rem; transform: scaleY(-1); }
+  .corner-br { bottom: 2.5rem; right: 2.5rem; transform: scale(-1); }
+
+  .hero-eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--brass-lt);
+    margin-bottom: 1.5rem;
+    position: relative; z-index: 1;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display SC', serif;
+    font-size: clamp(4.5rem, 13vw, 11rem);
+    color: var(--parchment);
+    text-align: center;
+    line-height: 0.9;
+    letter-spacing: -0.01em;
+    position: relative; z-index: 1;
+    text-shadow: 0 4px 40px rgba(0,0,0,0.3);
+  }
+
+  /* The signature: a brass rule with leaf ornament through the title */
+  .hero-rule {
+    width: 100%;
+    max-width: 680px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--brass), transparent);
+    position: relative;
+    margin: 1.4rem 0;
+    z-index: 1;
+  }
+  .hero-rule::before {
+    content: '✦';
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--brass);
+    font-size: 0.9rem;
+    background: var(--forest);
+    padding: 0 0.6rem;
+  }
+
+  .hero-sub {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    color: var(--parchment);
+    opacity: 0.75;
+    text-align: center;
+    position: relative; z-index: 1;
+    margin-bottom: 3rem;
+  }
+
+  .hero-ctas {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+    justify-content: center;
+    position: relative; z-index: 1;
+  }
+  .btn-primary {
+    background: var(--brass);
+    color: var(--charcoal);
+    border: none;
+    padding: 0.95rem 2.4rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.25s, transform 0.2s;
+    cursor: pointer;
+  }
+  .btn-primary:hover { background: var(--brass-lt); transform: translateY(-2px); }
+  .btn-outline {
+    background: transparent;
+    color: var(--parchment);
+    border: 1px solid rgba(242,232,213,0.5);
+    padding: 0.95rem 2.4rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-block;
+    transition: border-color 0.25s, background 0.25s;
+  }
+  .btn-outline:hover { border-color: var(--parchment); background: rgba(255,255,255,0.06); }
+
+  .scroll-hint {
+    position: absolute; bottom: 2.2rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+    z-index: 1;
+    animation: float 2.4s ease-in-out infinite;
+  }
+  .scroll-hint span {
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--brass); opacity: 0.7;
+  }
+  .scroll-hint svg { color: var(--brass); opacity: 0.7; }
+  @keyframes float { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(6px); } }
+
+  /* ── INTRO STRIP ── */
+  .intro-strip {
+    background: var(--brass);
+    padding: 1.2rem 3rem;
+    overflow: hidden;
+  }
+  .marquee-track {
+    display: flex; gap: 3rem;
+    white-space: nowrap;
+    animation: marquee 22s linear infinite;
+  }
+  .marquee-item {
+    font-family: 'Playfair Display SC', serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    color: var(--charcoal);
+    flex-shrink: 0;
+  }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ── SECTION UTILITY ── */
+  .section { padding: 7rem 2rem; }
+  .section-inner { max-width: 1120px; margin: 0 auto; }
+  .section-label {
+    font-size: 0.68rem; letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--brass); margin-bottom: 1.2rem; display: block;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 5vw, 3.6rem);
+    line-height: 1.1;
+    margin-bottom: 1.4rem;
+  }
+  .section-body {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    opacity: 0.82;
+    max-width: 580px;
+  }
+
+  /* ── ABOUT ── */
+  .about { background: var(--cream); }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+  .about-image-box {
+    position: relative;
+  }
+  .about-image-placeholder {
+    background: var(--forest);
+    aspect-ratio: 4/5;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-image-placeholder::after {
+    content: '';
+    position: absolute; inset: 16px;
+    border: 1px solid rgba(184,147,90,0.35);
+    pointer-events: none;
+  }
+  .about-img-inner {
+    font-family: 'Playfair Display SC', serif;
+    color: rgba(242,232,213,0.15);
+    font-size: 5rem;
+    letter-spacing: -0.02em;
+    text-align: center;
+    padding: 2rem;
+  }
+  .about-badge {
+    position: absolute;
+    bottom: -1.8rem; right: -1.8rem;
+    width: 110px; height: 110px;
+    background: var(--brass);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+  }
+  .about-badge-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.72rem;
+    line-height: 1.5;
+    color: var(--charcoal);
+    font-weight: 700;
+  }
+  .about-divider {
+    width: 60px; height: 2px;
+    background: var(--brass);
+    margin: 2rem 0;
+  }
+  .about-features {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1.4rem;
+    margin-top: 2.5rem;
+  }
+  .feature-item {
+    display: flex; gap: 0.8rem; align-items: flex-start;
+  }
+  .feature-icon {
+    width: 36px; height: 36px;
+    background: var(--forest);
+    border-radius: 0;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    color: var(--brass);
+    font-size: 1rem;
+  }
+  .feature-text { font-size: 0.88rem; line-height: 1.5; }
+  .feature-text strong { display: block; font-weight: 600; margin-bottom: 0.15rem; }
+
+  /* ── MENU SECTION ── */
+  .menu-section { background: var(--forest); }
+  .menu-section .section-title { color: var(--parchment); }
+  .menu-section .section-label { color: var(--brass-lt); }
+  .menu-section .section-body { color: rgba(242,232,213,0.75); }
+
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    margin-top: 4rem;
+    border: 1px solid rgba(184,147,90,0.2);
+  }
+  .menu-cat {
+    padding: 2.8rem 2.4rem;
+    border-right: 1px solid rgba(184,147,90,0.2);
+    position: relative;
+  }
+  .menu-cat:last-child { border-right: none; }
+  .menu-cat-title {
+    font-family: 'Playfair Display SC', serif;
+    font-size: 1.05rem;
+    letter-spacing: 0.08em;
+    color: var(--brass-lt);
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(184,147,90,0.2);
+  }
+  .menu-items { list-style: none; }
+  .menu-item {
+    padding: 0.8rem 0;
+    border-bottom: 1px solid rgba(242,232,213,0.07);
+    display: flex; justify-content: space-between; align-items: baseline;
+    gap: 1rem;
+  }
+  .menu-item:last-child { border-bottom: none; }
+  .menu-item-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.98rem;
+    color: var(--parchment);
+  }
+  .menu-item-desc {
+    font-size: 0.74rem;
+    color: rgba(242,232,213,0.5);
+    margin-top: 0.2rem;
+  }
+  .menu-item-price {
+    font-size: 0.85rem;
+    color: var(--brass);
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .menu-note {
+    margin-top: 3rem;
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: rgba(242,232,213,0.45);
+    font-size: 0.88rem;
+  }
+
+  /* ── REVIEWS ── */
+  .reviews { background: var(--parchment); }
+  .reviews-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 3.5rem;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  .rating-big {
+    display: flex; align-items: center; gap: 1.5rem;
+  }
+  .rating-num {
+    font-family: 'Playfair Display SC', serif;
+    font-size: 5rem;
+    color: var(--forest);
+    line-height: 1;
+  }
+  .rating-stars { color: var(--brass); font-size: 1.3rem; letter-spacing: 0.1em; }
+  .rating-count { font-size: 0.82rem; color: var(--text-dark); opacity: 0.6; margin-top: 0.3rem; }
+
+  .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+  .review-card {
+    background: var(--cream);
+    padding: 2rem;
+    border-left: 3px solid var(--brass);
+    position: relative;
+  }
+  .review-card::before {
+    content: '\201C';
+    position: absolute;
+    top: 0.8rem; right: 1.2rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    color: var(--brass);
+    opacity: 0.2;
+    line-height: 1;
+  }
+  .review-stars { color: var(--brass); font-size: 0.85rem; margin-bottom: 1rem; }
+  .review-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--charcoal);
+    margin-bottom: 1.2rem;
+  }
+  .review-author {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--forest);
+    font-weight: 600;
+    opacity: 0.7;
+  }
+
+  /* ── GARDEN SECTION ── */
+  .garden { background: var(--forest-lt); position: relative; overflow: hidden; }
+  .garden::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 80% 50%, rgba(28,52,38,0.3) 0%, rgba(28,52,38,0.8) 70%);
+  }
+  .garden-inner {
+    position: relative; z-index: 1;
+    max-width: 1120px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 6rem; align-items: center;
+  }
+  .garden-visual {
+    aspect-ratio: 1;
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+  /* SVG garden illustration */
+  .garden-content .section-title { color: var(--parchment); }
+  .garden-content .section-label { color: var(--brass-lt); }
+  .garden-content .section-body { color: rgba(242,232,213,0.75); }
+  .garden-tags {
+    display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 2.5rem;
+  }
+  .garden-tag {
+    background: rgba(242,232,213,0.1);
+    border: 1px solid rgba(184,147,90,0.3);
+    color: var(--parchment);
+    padding: 0.5rem 1.1rem;
+    font-size: 0.76rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── OPENING HOURS / INFO ── */
+  .info-section { background: var(--cream); }
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+    border: 1px solid rgba(28,52,38,0.12);
+    margin-top: 4rem;
+  }
+  .info-block {
+    padding: 3rem 2.5rem;
+    border-right: 1px solid rgba(28,52,38,0.12);
+  }
+  .info-block:last-child { border-right: none; }
+  .info-block-title {
+    font-family: 'Playfair Display SC', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    color: var(--forest);
+    margin-bottom: 1.8rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(28,52,38,0.12);
+  }
+  .hours-row {
+    display: flex; justify-content: space-between;
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+    border-bottom: 1px solid rgba(28,52,38,0.06);
+  }
+  .hours-row:last-child { border-bottom: none; }
+  .hours-day { font-weight: 500; }
+  .hours-time { color: var(--forest); font-weight: 600; opacity: 0.75; }
+  .hours-closed { color: var(--terracotta); font-size: 0.82rem; }
+  .info-detail {
+    display: flex; gap: 0.8rem; align-items: flex-start;
+    padding: 0.7rem 0;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    border-bottom: 1px solid rgba(28,52,38,0.06);
+  }
+  .info-detail:last-child { border-bottom: none; }
+  .info-icon { color: var(--brass); font-size: 1rem; flex-shrink: 0; margin-top: 0.1rem; }
+
+  /* ── RESERVATION CTA ── */
+  .reservation-cta {
+    background: var(--charcoal);
+    padding: 7rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .reservation-cta::before {
+    content: 'BACHSTUBN';
+    position: absolute;
+    font-family: 'Playfair Display SC', serif;
+    font-size: 18rem;
+    color: rgba(255,255,255,0.025);
+    white-space: nowrap;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    letter-spacing: -0.02em;
+  }
+  .reservation-cta .section-label { color: var(--brass-lt); }
+  .reservation-cta .section-title { color: var(--parchment); text-align: center; max-width: 600px; margin: 0 auto 1.2rem; }
+  .reservation-cta .section-body { color: rgba(242,232,213,0.65); text-align: center; margin: 0 auto 3rem; }
+  .cta-inner { position: relative; z-index: 1; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--forest);
+    color: var(--parchment);
+    padding: 4rem 3rem 2rem;
+  }
+  .footer-inner {
+    max-width: 1120px; margin: 0 auto;
+    display: grid; grid-template-columns: 2fr 1fr 1fr;
+    gap: 4rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid rgba(242,232,213,0.1);
+  }
+  .footer-logo {
+    font-family: 'Playfair Display SC', serif;
+    font-size: 1.8rem;
+    letter-spacing: 0.1em;
+    color: var(--parchment);
+    margin-bottom: 1rem;
+  }
+  .footer-tagline {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.9rem;
+    opacity: 0.55;
+    line-height: 1.6;
+    max-width: 300px;
+    margin-bottom: 1.8rem;
+  }
+  .footer-link-group h4 {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin-bottom: 1.2rem;
+  }
+  .footer-link-group ul { list-style: none; }
+  .footer-link-group li { margin-bottom: 0.6rem; }
+  .footer-link-group a {
+    color: rgba(242,232,213,0.65);
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: color 0.2s;
+  }
+  .footer-link-group a:hover { color: var(--parchment); }
+  .footer-bottom {
+    max-width: 1120px; margin: 1.5rem auto 0;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.76rem;
+    opacity: 0.4;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1.4rem; }
+    .about-grid,
+    .garden-inner,
+    .info-grid { grid-template-columns: 1fr; }
+    .about-image-box { max-width: 400px; }
+    .menu-grid { grid-template-columns: 1fr !important; }
+    .menu-cat { border-right: none; border-bottom: 1px solid rgba(184,147,90,0.2); }
+    .menu-cat:last-child { border-bottom: none; }
+    .reviews-grid { grid-template-columns: 1fr; }
+    .info-block { border-right: none; border-bottom: 1px solid rgba(28,52,38,0.12); }
+    .info-block:last-child { border-bottom: none; }
+    .footer-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+    .corner { width: 55px; height: 55px; }
+    .corner-tl, .corner-tr { top: 4.5rem; }
+  }
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .section { padding: 5rem 1.5rem; }
+  }
+
+  /* fade-in on scroll */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">BACHSTUBN</div>
+  <ul class="nav-links">
+    <li><a href="#about">Das Lokal</a></li>
+    <li><a href="#speisekarte">Speisekarte</a></li>
+    <li><a href="#garten">Gastgarten</a></li>
+    <li><a href="#info">Öffnungszeiten</a></li>
+    <li><a href="#reservierung">Reservierung</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <!-- Corner ornaments -->
+  <div class="corner corner-tl">
+    <svg viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 80 L10 10 L80 10" stroke="#B8935A" stroke-width="1.5" fill="none"/>
+      <path d="M10 30 Q25 10 30 10" stroke="#B8935A" stroke-width="0.8" fill="none"/>
+      <path d="M30 10 Q10 15 10 30" stroke="#B8935A" stroke-width="0.8" fill="none"/>
+      <circle cx="10" cy="10" r="3" fill="#B8935A"/>
+      <circle cx="45" cy="10" r="1.5" fill="#B8935A" opacity="0.5"/>
+      <circle cx="10" cy="45" r="1.5" fill="#B8935A" opacity="0.5"/>
+    </svg>
+  </div>
+  <div class="corner corner-tr">
+    <svg viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 80 L10 10 L80 10" stroke="#B8935A" stroke-width="1.5" fill="none"/>
+      <path d="M10 30 Q25 10 30 10" stroke="#B8935A" stroke-width="0.8" fill="none"/>
+      <path d="M30 10 Q10 15 10 30" stroke="#B8935A" stroke-width="0.8" fill="none"/>
+      <circle cx="10" cy="10" r="3" fill="#B8935A"/>
+      <circle cx="45" cy="10" r="1.5" fill="#B8935A" opacity="0.5"/>
+      <circle cx="10" cy="45" r="1.5" fill="#B8935A" opacity="0.5"/>
+    </svg>
+  </div>
+  <div class="corner corner-bl">
+    <svg viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 80 L10 10 L80 10" stroke="#B8935A" stroke-width="1.5" fill="none"/>
+      <path d="M10 30 Q25 10 30 10" stroke="#B8935A" stroke-width="0.8" fill="none"/>
+      <path d="M30 10 Q10 15 10 30" stroke="#B8935A" stroke-width="0.8" fill="none"/>
+      <circle cx="10" cy="10" r="3" fill="#B8935A"/>
+      <circle cx="45" cy="10" r="1.5" fill="#B8935A" opacity="0.5"/>
+      <circle cx="10" cy="45" r="1.5" fill="#B8935A" opacity="0.5"/>
+    </svg>
+  </div>
+  <div class="corner corner-br">
+    <svg viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 80 L10 10 L80 10" stroke="#B8935A" stroke-width="1.5" fill="none"/>
+      <path d="M10 30 Q25 10 30 10" stroke="#B8935A" stroke-width="0.8" fill="none"/>
+      <path d="M30 10 Q10 15 10 30" stroke="#B8935A" stroke-width="0.8" fill="none"/>
+      <circle cx="10" cy="10" r="3" fill="#B8935A"/>
+      <circle cx="45" cy="10" r="1.5" fill="#B8935A" opacity="0.5"/>
+      <circle cx="10" cy="45" r="1.5" fill="#B8935A" opacity="0.5"/>
+    </svg>
+  </div>
+
+    <span class="hero-eyebrow">Wirtshaus · Duursmagasse 13, Mödling · € 10–30 p.P.</span>
+  <h1 class="hero-title">BACH<br>STUBN</h1>
+  <div class="hero-rule"></div>
+  <p class="hero-sub">Echte Wiener Küche. Herzlicher Service. Unvergessliche Momente.</p>
+  <div class="hero-ctas">
+    <a href="#reservierung" class="btn-primary">Tisch reservieren</a>
+    <a href="#speisekarte" class="btn-outline">Speisekarte ansehen</a>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Entdecken</span>
+    <svg width="16" height="24" viewBox="0 0 16 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 2 L8 22 M2 16 L8 22 L14 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+</section>
+
+<!-- MARQUEE STRIP -->
+<div class="intro-strip">
+  <div class="marquee-track">
+    <span class="marquee-item">✦ Ausgezeichnetes Essen</span>
+    <span class="marquee-item">✦ Herzlicher Service</span>
+    <span class="marquee-item">✦ Gemütlicher Gastgarten</span>
+    <span class="marquee-item">✦ Klassische Wirtshausküche</span>
+    <span class="marquee-item">✦ Wiener Schnitzel</span>
+    <span class="marquee-item">✦ Balkanspezialitäten</span>
+    <span class="marquee-item">✦ Murauer Bier vom Fass</span>
+    <span class="marquee-item">✦ Tagesmenü mit Suppe</span>
+    <span class="marquee-item">✦ Ausgezeichnetes Essen</span>
+    <span class="marquee-item">✦ Herzlicher Service</span>
+    <span class="marquee-item">✦ Gemütlicher Gastgarten</span>
+    <span class="marquee-item">✦ Klassische Wirtshausküche</span>
+    <span class="marquee-item">✦ Wiener Schnitzel</span>
+    <span class="marquee-item">✦ Balkanspezialitäten</span>
+    <span class="marquee-item">✦ Murauer Bier vom Fass</span>
+    <span class="marquee-item">✦ Tagesmenü mit Suppe</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="section about" id="about">
+  <div class="section-inner">
+    <div class="about-grid">
+      <div class="about-image-box">
+        <div class="about-image-placeholder">
+          <div class="about-img-inner">
+            <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M60 20 C40 20 25 35 25 55 C25 70 33 82 45 88 L45 100 L75 100 L75 88 C87 82 95 70 95 55 C95 35 80 20 60 20Z" stroke="#B8935A" stroke-width="1.5" fill="none" opacity="0.6"/>
+              <path d="M45 55 Q50 45 60 48 Q70 45 75 55" stroke="#B8935A" stroke-width="1.2" fill="none" opacity="0.5"/>
+              <circle cx="60" cy="60" r="8" stroke="#B8935A" stroke-width="1" fill="rgba(184,147,90,0.15)" opacity="0.6"/>
+              <path d="M60 40 L60 52 M50 44 L56 54 M70 44 L64 54" stroke="#B8935A" stroke-width="1" opacity="0.4"/>
+            </svg>
+          </div>
+          <div class="about-badge">
+            <div class="about-badge-text">Seit<br>vielen<br>Jahren</div>
+          </div>
+        </div>
+      </div>
+      <div class="about-content reveal">
+        <span class="section-label">Das Lokal</span>
+        <h2 class="section-title">Wo Wien noch<br>nach Hause schmeckt</h2>
+        <div class="about-divider"></div>
+        <p class="section-body">Die Bachstubn ist kein Restaurant — sie ist ein Erlebnis. Ein Ort, an dem echte Wirtshausküche noch hochgehalten wird: ehrlich, herzlich und mit Liebe zubereitet. Von der knusprigen Panade des Schnitzels bis zu den hausgemachten Balkanspezialitäten — hier kocht die Küche noch richtig.</p>
+        <p class="section-body" style="margin-top:1rem;">Unser aufmerksames Team sorgt dafür, dass Sie sich von der ersten Minute an wohlfühlen — ob beim schnellen Mittagsmenü oder beim gemütlichen Abendessen im Garten.</p>
+        <div class="about-features">
+          <div class="feature-item">
+            <div class="feature-icon">🍺</div>
+            <div class="feature-text"><strong>Murauer vom Fass</strong>Frisches Bier, wie es sein soll</div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🌿</div>
+            <div class="feature-text"><strong>Schattiger Garten</strong>Perfekt für warme Sommertage</div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🍽️</div>
+            <div class="feature-text"><strong>Tagesmenü</strong>Mit Suppe, werktags ab 10:30 Uhr</div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🚗</div>
+            <div class="feature-text"><strong>Parkplätze</strong>Reichlich vorhanden</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MENU -->
+<section class="section menu-section" id="speisekarte">
+  <div class="section-inner">
+    <div class="reveal">
+      <span class="section-label">Speisekarte</span>
+      <h2 class="section-title" style="color:var(--parchment)">Klassiker, die<br>man nicht vergisst</h2>
+      <p class="section-body" style="color:rgba(242,232,213,0.7)">Unsere Küche ehrliche Wirtshausküche — keine Schnörkel, dafür umso mehr Geschmack. Vom zarten Schnitzel bis zu den Balkanspezialitäten, die unsere Stammgäste immer wieder begeistern.</p>
+    </div>
+    <div class="menu-grid reveal" style="grid-template-columns: repeat(4, 1fr);">
+      <div class="menu-cat">
+        <div class="menu-cat-title">Schnitzel & Fleisch</div>
+        <ul class="menu-items">
+          <li class="menu-item">
+            <div>
+              <div class="menu-item-name">Wiener Schnitzel</div>
+              <div class="menu-item-desc">Vom Schwein, mit Petersilienkartoffeln oder Pommes</div>
+            </div>
+            <div class="menu-item-price">€ 15,90</div>
+          </li>
+          <li class="menu-item">
+            <div>
+              <div class="menu-item-name">Naturschnitzel</div>
+              <div class="menu-item-desc">Art des Hauses, scharf, mit Reis</div>
+            </div>
+            <div class="menu-item-price">€ 17,90</div>
+          </li>
+          <li class="menu-item">
+            <div>
+              <div class="menu-item-name">Cordon Bleu</div>
+              <div class="menu-item-desc">Mit Pommes</div>
+            </div>
+            <div class="menu-item-price">€ 18,90</div>
+          </li>
+          <li class="menu-item">
+            <div>
+              <div class="menu-item-name">Hühnerschnitzel</div>
+              <div class="menu-item-desc">Gebacken, mit Petersilienkartoffeln oder Pommes</div>
+            </div>
+            <div class="menu-item-price">€ 17,90</div>
+          </li>
+          <li class="menu-item">
+            <div>
+              <div class="menu-item-name">Großes Gulasch</div>
+              <div class="menu-item-desc">Mit Salzkartoffeln</div>
+            </div>
+            <div class="menu-item-price">€ 17,90</div>
+          </li>
+          <li class="menu-item">
+            <div>
+              <div class="menu-item-name">Zwiebelrostbraten</div>
+              <div class="menu-item-desc">Mit Bratkartoffeln</div>
+            </div>
+            <div class="menu-item-price">€ 25,90</div>
+          </li>
+        </ul>
+      </div>
+      <div class="menu-cat">
+        <div class="menu-cat-title">Vom Grill</div>
+        <ul class="menu-items">
+          <li class="menu-item">
+            <div>
+              <div class="menu-item-name">Ćevapčići</div>
+              <div class="menu-item-desc">Mit Bratkartoffeln und Garnierung</div>
+            </div>
+            <div class="menu-item-price">€ 17,90</div>
+          </li>
+          <li class="menu-item">
+            <div>
+              <div class="menu-item-name">Pljeskavica</div>
+              <div class="menu-item-desc">Mit Pommes und Garnierung</div>
+            </div>
+            <div class="menu-item-price">€ 17,90</div>
+          </li>
+          <li class="menu-item">
+            <div>
+              <div class="menu-item-name">Raznici</div>
+              <div class="menu-item-desc">Schweinsspieß, mit Pommes und Garnierung</div>
+            </div>
+            <div class="menu-item-price">€ 18,90</div>
+          </li>
+          <li class="menu-item">
+            <div>
+              <div class="menu-item-name">Hühnersp. im Speckmantel</div>
+              <div class="menu-item-desc">Gegrillt auf Ratatouille mit Kräuterrahm</div>
+            </div>
+            <div class="menu-item-price">€ 20,90</div>
+          </li>
+          <li class="menu-item">
+            <div>
+              <div class="menu-item-name">Grillteller</div>
+              <div class="menu-item-desc">Pljeskavica, Raznici, Schweinskotelette, Grillwürstel</div>
+            </div>
+            <div class="menu-item-price">€ 23,90</div>
+          </li>
+          <li class="menu-item">
+            <div>
+              <div class="menu-item-name">Bachstubn-Platte</div>
+              <div class="menu-item-desc">Für 2 Personen – Gegrilltes & Gebackenes vom Schwein, Rind, Huhn</div>
+            </div>
+            <div class="menu-item-price">€ 44,90</div>
+          </li>
+        </ul>
+      </div>
+      <div class="menu-cat">
+        <div class="menu-cat-title">Fisch & Vorspeisen</div>
+        <ul class="menu-items">
+          <li class="menu-item">
+            <div>
+              <div class="menu-item-name">Scholle gebacken</div>
+              <div class="menu-item-desc">Mit Kartoffelsalat</div>
+            </div>
+            <div class="menu-item-price">€ 20,90</div>
+          </li>
+          <li class="menu-item">
+            <div>
+              <div class="menu-item-name">Zander gebacken</div>
+              <div class="menu-item-desc">Mit Kartoffelsalat</div>
+            </div>
+            <div class="menu-item-price">€ 21,90</div>
+          </li>
+          <li class="menu-item">
+            <div>
+              <div class="menu-item-name">Zander serbisch</div>
+              <div class="menu-item-desc">Mit Petersilienkartoffeln</div>
+            </div>
+            <div class="menu-item-price">€ 24,90</div>
+          </li>
+          <li class="menu-item">
+            <div>
+              <div class="menu-item-name">Mozzarella</div>
+              <div class="menu-item-desc">Mit Tomaten, Basilikum und Olivenöl</div>
+            </div>
+            <div class="menu-item-price">€ 13,90</div>
+          </li>
+          <li class="menu-item">
+            <div>
+              <div class="menu-item-name">Ajvar mit Käse</div>
+              <div class="menu-item-desc">Vorspeise</div>
+            </div>
+            <div class="menu-item-price">€ 13,90</div>
+          </li>
+          <li class="menu-item">
+            <div>
+              <div class="menu-item-name">Rindssuppe</div>
+              <div class="menu-item-desc">Mit Fritatten, Leberknödel oder Nudeln</div>
+            </div>
+            <div class="menu-item-price">€ 5,40</div>
+          </li>
+        </ul>
+      </div>
+      <div class="menu-cat">
+        <div class="menu-cat-title">Dessert & Kleines</div>
+        <ul class="menu-items">
+          <li class="menu-item">
+            <div>
+              <div class="menu-item-name">Palatschinken</div>
+              <div class="menu-item-desc">Mit Marmelade (2 Stk.)</div>
+            </div>
+            <div class="menu-item-price">€ 8,90</div>
+          </li>
+          <li class="menu-item">
+            <div>
+              <div class="menu-item-name">Schokopalatschinken</div>
+              <div class="menu-item-desc">Mit Nussfülle (2 Stk.)</div>
+            </div>
+            <div class="menu-item-price">€ 9,90</div>
+          </li>
+          <li class="menu-item">
+            <div>
+              <div class="menu-item-name">Topfenstrudel</div>
+              <div class="menu-item-desc">Mit Vanillesauce</div>
+            </div>
+            <div class="menu-item-price">€ 8,90</div>
+          </li>
+          <li class="menu-item">
+            <div>
+              <div class="menu-item-name">Apfelstrudel</div>
+              <div class="menu-item-desc">Hausgemacht</div>
+            </div>
+            <div class="menu-item-price">€ 8,90</div>
+          </li>
+          <li class="menu-item">
+            <div>
+              <div class="menu-item-name">Ham and Eggs</div>
+              <div class="menu-item-desc">3 Eier, mit einer Semmel</div>
+            </div>
+            <div class="menu-item-price">€ 9,90</div>
+          </li>
+          <li class="menu-item">
+            <div>
+              <div class="menu-item-name">Frankfurter</div>
+              <div class="menu-item-desc">Mit Senf, Kren und Semmel</div>
+            </div>
+            <div class="menu-item-price">€ 8,90</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <p class="menu-note">Alle Preise inkl. MwSt. · Kleine Portionen um € 1,– günstiger · Vollständige Speisekarte im Lokal</p>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="section reviews" id="bewertungen">
+  <div class="section-inner">
+    <div class="reviews-header reveal">
+      <div>
+        <span class="section-label">Was unsere Gäste sagen</span>
+        <h2 class="section-title">Über 25 Jahre<br>glückliche Stammgäste</h2>
+      </div>
+      <div class="rating-big">
+        <div class="rating-num">4.5</div>
+        <div>
+          <div class="rating-stars">★★★★★</div>
+          <div class="rating-count">Basierend auf Google Bewertungen</div>
+        </div>
+      </div>
+    </div>
+    <div class="reviews-grid">
+      <div class="review-card reveal">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">Sehr nettes Ambiente, das Essen ist exzellent und super Service! Gerne komme ich immer wieder.</p>
+        <div class="review-author">Tamás H. · Local Guide</div>
+      </div>
+      <div class="review-card reveal">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">Sehr gute klassische Wirtshausküche, die Getränkeauswahl ist ebenfalls sehr fein. Aufmerksames Service und ein adäquates Preis-Leistungs-Verhältnis. Absolut empfehlenswert!</p>
+        <div class="review-author">M. A. · Local Guide</div>
+      </div>
+      <div class="review-card reveal">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">Schnitzel probiert — schön dünn, die Panade hat sich leicht abgehoben. Sehr lecker. Service war schnell und freundlich.</p>
+        <div class="review-author">Alexander G. · Local Guide</div>
+      </div>
+      <div class="review-card reveal">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">Super Essen zu super Preisen, freundliches Personal! Richtiges Wirtshaus, wie es sein soll.</p>
+        <div class="review-author">A. Eh · Local Guide</div>
+      </div>
+      <div class="review-card reveal">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">Besonders empfehlenswert sind die typischen Balkangerichte, die wirklich ausgezeichnet sind! Toller Garten mit Schatten — immer wieder gerne.</p>
+        <div class="review-author">Michael H. · Local Guide</div>
+      </div>
+      <div class="review-card reveal">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">Freundliches Personal und ausgezeichnetes Essen zu einem vernünftigen Preis. Sehr gemütliche Atmosphäre.</p>
+        <div class="review-author">Leopold L. · Local Guide</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GARDEN -->
+<section class="section garden" id="garten">
+  <div class="garden-inner">
+    <div class="garden-visual reveal">
+      <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:360px; opacity:0.75;">
+        <!-- Ground -->
+        <ellipse cx="200" cy="340" rx="160" ry="20" fill="rgba(184,147,90,0.1)"/>
+        <!-- Tree trunk -->
+        <rect x="188" y="240" width="24" height="100" fill="rgba(184,147,90,0.3)"/>
+        <!-- Tree canopy -->
+        <ellipse cx="200" cy="180" rx="80" ry="80" fill="rgba(28,52,38,0.8)" stroke="rgba(184,147,90,0.2)" stroke-width="1.5"/>
+        <ellipse cx="160" cy="210" rx="55" ry="55" fill="rgba(37,72,54,0.7)"/>
+        <ellipse cx="240" cy="210" rx="55" ry="55" fill="rgba(37,72,54,0.7)"/>
+        <ellipse cx="200" cy="140" rx="65" ry="55" fill="rgba(37,72,54,0.9)"/>
+        <!-- Dappled light -->
+        <circle cx="185" cy="175" r="8" fill="rgba(184,147,90,0.12)"/>
+        <circle cx="215" cy="190" r="6" fill="rgba(184,147,90,0.1)"/>
+        <circle cx="200" cy="155" r="5" fill="rgba(184,147,90,0.08)"/>
+        <!-- Table -->
+        <rect x="155" y="290" width="90" height="6" rx="2" fill="rgba(184,147,90,0.5)"/>
+        <rect x="168" y="296" width="8" height="40" rx="2" fill="rgba(184,147,90,0.3)"/>
+        <rect x="224" y="296" width="8" height="40" rx="2" fill="rgba(184,147,90,0.3)"/>
+        <!-- Glasses -->
+        <rect x="183" y="278" width="12" height="14" rx="2" fill="rgba(184,147,90,0.35)" stroke="rgba(184,147,90,0.4)" stroke-width="0.8"/>
+        <rect x="205" y="278" width="12" height="14" rx="2" fill="rgba(184,147,90,0.2)" stroke="rgba(184,147,90,0.4)" stroke-width="0.8"/>
+        <!-- Border frame -->
+        <rect x="20" y="20" width="360" height="360" stroke="rgba(184,147,90,0.2)" stroke-width="1" fill="none"/>
+        <rect x="30" y="30" width="340" height="340" stroke="rgba(184,147,90,0.1)" stroke-width="0.5" fill="none"/>
+      </svg>
+    </div>
+    <div class="garden-content reveal">
+      <span class="section-label">Gastgarten</span>
+      <h2 class="section-title">Ein Garten wie<br>aus einem Traum</h2>
+      <p class="section-body">Unser schattiger Gastgarten ist das Herzstück der Bachstubn in den warmen Monaten. Unter alten Bäumen, mit frisch gezapftem Murauer in der Hand — hier vergisst man die Zeit.</p>
+      <p class="section-body" style="margin-top:1rem;">Unsere Stammgäste kommen immer wieder: für die Ruhe, die Atmosphäre und das Gefühl, endlich angekommen zu sein.</p>
+      <div class="garden-tags">
+        <span class="garden-tag">Schattenplätzchen</span>
+        <span class="garden-tag">Kühle Getränke</span>
+        <span class="garden-tag">Familienfreundlich</span>
+        <span class="garden-tag">Idyllische Lage</span>
+        <span class="garden-tag">Reichlich Parkplätze</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INFO -->
+<section class="section info-section" id="info">
+  <div class="section-inner">
+    <div class="reveal">
+      <span class="section-label">Besuch Planen</span>
+      <h2 class="section-title">Wir freuen uns<br>auf Ihren Besuch</h2>
+    </div>
+    <div class="info-grid reveal">
+      <div class="info-block">
+        <div class="info-block-title">Öffnungszeiten</div>
+        <div class="hours-row"><span class="hours-day">Montag</span><span class="hours-time">10:30 – 22:30</span></div>
+        <div class="hours-row"><span class="hours-day">Dienstag</span><span class="hours-time">10:30 – 22:30</span></div>
+        <div class="hours-row"><span class="hours-day">Mittwoch</span><span class="hours-time">10:30 – 22:30</span></div>
+        <div class="hours-row"><span class="hours-day">Donnerstag</span><span class="hours-time">10:30 – 22:30</span></div>
+        <div class="hours-row"><span class="hours-day">Freitag</span><span class="hours-time">10:30 – 22:30</span></div>
+        <div class="hours-row"><span class="hours-day">Samstag</span><span class="hours-closed">Geschlossen</span></div>
+        <div class="hours-row"><span class="hours-day">Sonntag</span><span class="hours-time">10:30 – 15:00</span></div>
+        <p style="font-size:0.75rem; margin-top:1rem; opacity:0.5;">Küche schließt 30 Minuten vor Lokal. Tagesmenü werktags bis 14:30 Uhr.</p>
+      </div>
+      <div class="info-block">
+        <div class="info-block-title">Anreise & Lage</div>
+        <div class="info-detail">
+          <span class="info-icon">📍</span>
+          <div>Duursmagasse 13, 2340 Mödling<br><span style="opacity:0.6;font-size:0.82rem;"><a href="https://maps.google.com/?q=Duursmagasse+13,+2340+Mödling" target="_blank" style="color:var(--brass);text-decoration:none;">Auf Google Maps öffnen →</a></span></div>
+        </div>
+        <div class="info-detail">
+          <span class="info-icon">🚗</span>
+          <div>Parkplätze vorhanden<br><span style="opacity:0.6;font-size:0.82rem;">Reichlich und kostenlos</span></div>
+        </div>
+        <div class="info-detail">
+          <span class="info-icon">🚌</span>
+          <div>Öffentliche Anbindung<br><span style="opacity:0.6;font-size:0.82rem;">Bus & S-Bahn in der Nähe</span></div>
+        </div>
+        <div class="info-detail">
+          <span class="info-icon">♿</span>
+          <div>Barrierefreier Zugang<br><span style="opacity:0.6;font-size:0.82rem;">Ebenerdiger Eingang</span></div>
+        </div>
+      </div>
+      <div class="info-block">
+        <div class="info-block-title">Kontakt & Service</div>
+        <div class="info-detail">
+          <span class="info-icon">📞</span>
+          <div><a href="tel:+436642627298" style="color:inherit;text-decoration:none;font-weight:600;">0664 2627298</a><br><span style="opacity:0.6;font-size:0.82rem;">Reservierungen & Bestellungen</span></div>
+        </div>
+        <div class="info-detail">
+          <span class="info-icon">🥡</span>
+          <div>Zum Mitnehmen<br><span style="opacity:0.6;font-size:0.82rem;">Speisen auch zum Abholen erhältlich</span></div>
+        </div>
+        <div class="info-detail">
+          <span class="info-icon">🍽️</span>
+          <div>Tagesmenü<br><span style="opacity:0.6;font-size:0.82rem;">Suppe + Hauptspeise, Mo–Fr</span></div>
+        </div>
+        <div class="info-detail">
+          <span class="info-icon">🌿</span>
+          <div>Gastgarten<br><span style="opacity:0.6;font-size:0.82rem;">Saisonal geöffnet, bei schönem Wetter</span></div>
+        </div>
+        <div class="info-detail">
+          <span class="info-icon">💳</span>
+          <div>Zahlung<br><span style="opacity:0.6;font-size:0.82rem;">Bar & Karte akzeptiert</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESERVATION CTA -->
+<section class="reservation-cta" id="reservierung">
+  <div class="cta-inner reveal">
+    <span class="section-label">Tisch reservieren</span>
+    <h2 class="section-title">Kommen Sie vorbei —<br>wir freuen uns auf Sie</h2>
+    <p class="section-body">Für besondere Anlässe, Gruppen oder einfach weil Sie einen schönen Abend verdienen. Reservierungen sind herzlich willkommen.</p>
+    <div style="margin-top:3rem; display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+      <a href="tel:+436642627298" class="btn-primary">☎ 0664 2627298</a>
+      <a href="mailto:info@bachstubn.at" class="btn-outline">E-Mail schreiben</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">BACHSTUBN</div>
+      <p class="footer-tagline">Ein echtes Wiener Wirtshaus, wie man es früher kannte — und wie man es heute noch liebt.</p>
+      <div style="display:flex; gap:1rem;">
+        <a href="#" style="color:var(--brass); font-size:0.8rem; text-decoration:none;">Google Maps</a>
+        <a href="#" style="color:var(--brass); font-size:0.8rem; text-decoration:none;">Facebook</a>
+        <a href="#" style="color:var(--brass); font-size:0.8rem; text-decoration:none;">Instagram</a>
+      </div>
+    </div>
+    <div class="footer-link-group">
+      <h4>Navigation</h4>
+      <ul>
+        <li><a href="#about">Das Lokal</a></li>
+        <li><a href="#speisekarte">Speisekarte</a></li>
+        <li><a href="#garten">Gastgarten</a></li>
+        <li><a href="#info">Öffnungszeiten</a></li>
+        <li><a href="#reservierung">Reservierung</a></li>
+      </ul>
+    </div>
+    <div class="footer-link-group">
+      <h4>Rechtliches</h4>
+      <ul>
+        <li><a href="#">Impressum</a></li>
+        <li><a href="#">Datenschutz</a></li>
+        <li><a href="#">AGB</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Bachstubn. Alle Rechte vorbehalten.</span>
+    <span>Made with ♥ in Mödling</span>
+  </div>
+</footer>
+
+<script>
+  // Nav scroll effect
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Respect reduced motion
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    reveals.forEach(el => el.classList.add('visible'));
+    document.querySelector('.marquee-track').style.animation = 'none';
+  }
+</script>
+</body>
+</html>
